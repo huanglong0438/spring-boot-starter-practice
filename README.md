@@ -7,4 +7,4 @@ spring的自定义starter demo
 4.新建`spring.factories`文件，指定Starter的自动装配类；  
 
 ## Calculator
-模拟其它starter的实现，自动生成并注入计算机对象
+模拟其它starter的实现，自动生成并注入计算器对象
