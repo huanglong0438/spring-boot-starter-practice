@@ -7,4 +7,9 @@ spring的自定义starter demo
 4.新建`spring.factories`文件，指定Starter的自动装配类；  
 
 ## Calculator
-模拟其它starter的实现，自动生成并注入计算器对象
+简单的starter的测试工程，模拟其它starter的实现，自动生成并注入计算器对象
+
+## boy next door
+一个基于SpringBoot的starter开发的RPC框架，  
+序列化计划采用Google的ProtoBuffer，  
+服务采用**基于NIO多路复用技术的**netty框架
