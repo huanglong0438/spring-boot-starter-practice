@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.dc.starter.CalculatorAutoConfiguration
+  com.dc.starter.calculator.CalculatorAutoConfiguration

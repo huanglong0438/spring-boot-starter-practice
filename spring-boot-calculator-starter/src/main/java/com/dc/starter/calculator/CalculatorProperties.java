@@ -1,4 +1,4 @@
-package com.dc.starter;
+package com.dc.starter.calculator;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

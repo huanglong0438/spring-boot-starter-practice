@@ -1,4 +1,4 @@
-package com.dc.starter;
+package com.dc.starter.calculator;
 
 import lombok.extern.slf4j.Slf4j;
 

@@ -6,7 +6,12 @@
 
     <groupId>com.dc</groupId>
     <artifactId>spring-boot-starter-practice</artifactId>
+    <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>spring-boot-calculator-starter</module>
+        <module>spring-boot-boynextdoor-starter</module>
+    </modules>
 
     <dependencies>
         <!-- lombok -->

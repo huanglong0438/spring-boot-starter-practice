@@ -1,4 +1,4 @@
-package com.dc.starter;
+package com.dc.starter.calculator;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,9 +8,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * com.dc.starter.CalculatorAutoConfiguration
+ * CalculatorAutoConfiguration
  *
- * @title com.dc.starter.CalculatorAutoConfiguration
+ * @title CalculatorAutoConfiguration
  * @Description
  * @Author donglongcheng01
  * @Date 2019-07-22
