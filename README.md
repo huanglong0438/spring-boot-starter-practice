@@ -1,5 +1,3 @@
-[TOC]  
-
 # spring-boot-starter-practice
 spring的自定义starter demo
 
@@ -14,7 +12,7 @@ spring的自定义starter demo
 ## boy next door（建设中）
 一个基于SpringBoot的starter开发的RPC框架，  
 序列化计划采用Google的ProtoBuffer，  
-服务采用**基于NIO多路复用技术的**netty框架
+服务采用**基于NIO多路复用技术的**netty框架，支持高并发情况下快速响应
 
 ## fake-lombok（暂停）
 
