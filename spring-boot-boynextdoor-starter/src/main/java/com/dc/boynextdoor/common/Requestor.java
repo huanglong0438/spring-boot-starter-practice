@@ -18,7 +18,7 @@ public interface Requestor<T> {
 
     boolean isAvailable();
 
-    void request(Request request, Callback<T> callback) throws IllegalStateException;
+    void request(Request request, Callback<Response> callback) throws IllegalStateException;
 
     void destroy();
 

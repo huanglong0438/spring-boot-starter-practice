@@ -1,8 +1,8 @@
 package com.dc.boynextdoor.remoting;
 
 import com.dc.boynextdoor.common.Requestor;
+import com.dc.boynextdoor.common.URI;
 
-import java.net.URI;
 import java.util.List;
 
 /**

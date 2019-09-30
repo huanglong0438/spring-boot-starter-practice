@@ -4,7 +4,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
- * 用来根据Class定位到单例的类
+ * 用来根据Class定位到单例的类，这个类存在的意义就是因为不想依赖Spring，但是又想有Spring的获取bean的功能
  *
  * @title TypeLocator
  * @Description

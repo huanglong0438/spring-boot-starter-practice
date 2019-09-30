@@ -18,7 +18,7 @@ import org.springframework.context.ApplicationListener;
 import java.util.Map;
 
 /**
- * EndPointStarter
+ * EndPointStarter，实现了ApplicationListener，在Spring加载完成后会执行主流程，诶个注册服务
  *
  * @title EndPointStarter
  * @Description

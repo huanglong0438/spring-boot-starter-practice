@@ -4,13 +4,14 @@ import com.dc.boynextdoor.common.Requestor;
 import com.dc.boynextdoor.remoting.server.NettyServer;
 import com.dc.boynextdoor.remoting.server.Server;
 
-import java.net.URI;
+import com.dc.boynextdoor.common.URI;
+
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
- * VanEndPoint
+ * VanEndPoint 代理了nettyServer的功能
  *
  * @title VanEndPoint
  * @Description
@@ -73,7 +74,9 @@ public class VanEndPoint implements EndPoint {
     @Override
     public void startServer() {
         started = true;
-
+        for (Server server : serverMap.values()) {
+            server.start();
+        }
 
     }
 

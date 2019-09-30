@@ -1,6 +1,5 @@
 package com.dc.boynextdoor.common;
 
-import java.net.URI;
 import java.util.Map;
 
 /**

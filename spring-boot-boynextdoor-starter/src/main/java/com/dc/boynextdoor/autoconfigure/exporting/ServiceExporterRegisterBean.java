@@ -6,7 +6,7 @@ import javax.annotation.PostConstruct;
 import java.net.URI;
 
 /**
- * ServiceExporterRegisterBean
+ * RPC服务的provider
  *
  * @title ServiceExporterRegisterBean
  * @Description
