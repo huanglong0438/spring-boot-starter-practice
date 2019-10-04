@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentMap;
  * VanEndPoint 代理了nettyServer的功能
  *
  * @title VanEndPoint
- * @Description
+ * @Description VanEndPoint，封装了nettyServer的功能
  * @Author donglongcheng01
  * @Date 2019-08-01
  **/
@@ -35,12 +35,10 @@ public class VanEndPoint implements EndPoint {
     }
 
     /**
-     * 懒加载serverMap
-     * serverMap已经是线程安全的了，是否有必要用这个synchronized加锁？
-     *  有必要
+     * 懒加载serverMap，一个ip:port唯一确定一个server
      *
-     * @param uri
-     * @return
+     * @param uri van协议的uri
+     * @return 一个server（nettyServer）
      */
     private Server initServer(URI uri) {
         String key = uri.getHost() + uri.getPort();
@@ -74,6 +72,7 @@ public class VanEndPoint implements EndPoint {
     @Override
     public void startServer() {
         started = true;
+        // 一个ip:port的server就启动一次，一般也就一个
         for (Server server : serverMap.values()) {
             server.start();
         }

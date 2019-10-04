@@ -78,7 +78,7 @@ public class NettyServerHander extends ChannelInboundHandlerAdapter {
             try {
                 // 3. 在这里把响应的结果序列化成Response，然后写入channel
                 byte[] content = codec.encode(RpcResponse.class, (RpcResponse) response);
-                ctx.channel().write(Unpooled.wrappedBuffer(content));
+                ctx.channel().writeAndFlush(Unpooled.wrappedBuffer(content));
             } catch (Throwable error) {
                 log.warn("encode error", error);
                 return;

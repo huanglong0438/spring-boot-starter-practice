@@ -18,7 +18,7 @@ import org.springframework.context.ApplicationListener;
 import java.util.Map;
 
 /**
- * EndPointStarter，实现了ApplicationListener，在Spring加载完成后会执行主流程，诶个注册服务
+ * EndPointStarter，实现了ApplicationListener，在Spring加载完成后会执行主流程，挨个注册服务
  *
  * @title EndPointStarter
  * @Description
@@ -34,11 +34,13 @@ public class EndPointStarter implements ApplicationListener<ApplicationReadyEven
     private BoyNextDoorProperties boyNextDoorProperties;
 
     public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
+        // EndPoint就是nettyServer
         EndPoint endPoint = TypeLocator.getInstance().getInstanceOfType(EndPoint.class);
         if (endPoint.isStarted()) {
             return;
         }
 
+        // 服务端的所有service
         Map<String, ServiceExporterRegisterBean> services =
                 beanFactory.getBeansOfType(ServiceExporterRegisterBean.class);
 
@@ -46,7 +48,7 @@ public class EndPointStarter implements ApplicationListener<ApplicationReadyEven
             return;
         }
 
-        // 核心：启动netty server端
+        // 核心：启动netty server
         log.info("starting boy next door...");
         endPoint.startServer();
 
@@ -55,7 +57,7 @@ public class EndPointStarter implements ApplicationListener<ApplicationReadyEven
             return;
         }
 
-        // 核心：注册到zk
+        // 核心：把服务端的service注册到zk
         log.info("registering services...");
         services.forEach((serviceName, registerBean) -> registerBean.register());
 

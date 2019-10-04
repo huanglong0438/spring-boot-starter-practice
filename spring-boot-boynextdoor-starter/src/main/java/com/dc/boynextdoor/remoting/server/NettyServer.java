@@ -59,21 +59,21 @@ public class NettyServer implements Server {
         log.info("Netty Server starting... at " + host + ":" + port);
         // 【重点】netty服务的启动
         InetSocketAddress addr = new InetSocketAddress(host, port);
-        EventLoopGroup boosGroup = new NioEventLoopGroup(1);
+        EventLoopGroup bossGroup = new NioEventLoopGroup(1);
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
             ServerBootstrap b = new ServerBootstrap();
-            b.group(boosGroup, workerGroup)
-                    .channel(NioServerSocketChannel.class)
-                    .childHandler(serverChannelInitializer)
-                    .option(ChannelOption.SO_BACKLOG, 128)
-                    .childOption(ChannelOption.SO_KEEPALIVE, true);
+            b.group(bossGroup, workerGroup)
+                    .channel(NioServerSocketChannel.class) // 用NIO
+                    .childHandler(serverChannelInitializer) // boosGroup处理接收，worker负责处理
+                    .option(ChannelOption.SO_BACKLOG, 128) // TCP的参数
+                    .childOption(ChannelOption.SO_KEEPALIVE, true); // 维持长连接
             future = b.bind(addr).syncUninterruptibly(); // 等待bind结束，不可中断
             log.info("Rpc Server started... at " + port);
             future.channel().closeFuture().syncUninterruptibly();
         } finally {
             workerGroup.shutdownGracefully();
-            boosGroup.shutdownGracefully();
+            bossGroup.shutdownGracefully();
         }
     }
 
@@ -111,3 +111,4 @@ public class NettyServer implements Server {
         server.start();
     }
 }
+

@@ -6,6 +6,7 @@ import com.dc.boynextdoor.common.Response;
 import com.dc.boynextdoor.common.URI;
 import com.dc.boynextdoor.common.codec.Codec;
 import com.dc.boynextdoor.common.codec.protostuff.ProtostuffCodec;
+import com.dc.boynextdoor.common.constants.Constants;
 import com.dc.boynextdoor.common.ext.TypeLocator;
 import com.dc.boynextdoor.remoting.core.RpcRequest;
 import io.netty.bootstrap.Bootstrap;
@@ -20,6 +21,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -152,13 +155,18 @@ public class NettyClient implements Client {
     }
 
     public static void main(String[] args) {
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put(Constants.GROUP_KEY, "normal");
+        parameters.put(Constants.INTERFACE_KEY, "fuckyou");
+        parameters.put(Constants.VERSION_KEY, "1.0.0");
         URI uri = new URI("van", "", "",
-                "127.0.0.1", 8888, "/dlc/test", null);
+                "127.0.0.1", 8888, "/dlc/test", parameters);
         RpcRequest rpcRequest = new RpcRequest();
         rpcRequest.setMethodName("dlctest");
         rpcRequest.setId("666");
         rpcRequest.setParameterTypes(new Class[]{String.class});
         rpcRequest.setParameters(new Object[]{"param"});
+        rpcRequest.setUri(uri);
         NettyClient nettyClient = new NettyClient(uri);
         nettyClient.connect(uri);
         nettyClient.transceive(rpcRequest, null);
