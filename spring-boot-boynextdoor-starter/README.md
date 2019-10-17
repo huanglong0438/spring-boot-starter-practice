@@ -4,11 +4,16 @@
 服务采用**基于NIO多路复用技术的**netty框架，支持高并发情况下快速响应
 
 ## 结构
-入口：EndPointStarter，响应容器启动事件，注册服务到zk（或者Eruka），启动netty server
+入口：EndPointStarter，响应容器启动事件，注册服务到zk（或者Eruka），启动netty server（netty的server和client模板，inbound，outbound）
+`com.dc.boynextdoor.remoting.VanEndPoint#export`，核心，是server端注册service的核心，用了RpcLocalContext**初始化上下文**，用了FilterManager构造**责任链**，用了**SecurityManager**绕过类加载的权限问题
 
 ## 技术点
  - `com.dc.boynextdoor.common.ext.TypeLocator` - 线程安全的懒汉单例模式
  - `com.dc.boynextdoor.remoting.server.NettyServer` - netty服务端的最佳实践
+ - `com.dc.boynextdoor.core.MethodCache` - 用来缓存impl类的method，防止重复调用反射的性能问题，类似于单例模式的*饿汉模式*
+ - `com.dc.boynextdoor.remoting.RpcLocalContext` - 跨线程版的ThreadLocal，对ThreadLocal的理解
+ - `com.dc.boynextdoor.core.FilterManager` - 责任链模式，Java局部内部类访问局部变量为什么必须加final关键字
+ 
  
 ## todo
  - `com.dc.boynextdoor.remoting.server.NettyServer`补全并单测

@@ -92,7 +92,7 @@ public class NettyServer implements Server {
 
     @Override
     public void registerService(Requestor<?> requestor) {
-
+        handler.registerService(requestor);
     }
 
     @Override

@@ -65,18 +65,19 @@ public class NettyServerHander extends ChannelInboundHandlerAdapter {
             String serviceKey = request.getUri().getServiceKey();
             Assert.hasText(serviceKey, "Service key is empty");
             Assert.notNull(serviceKey, "Service key is null");
+            // 1. 这一步会根据serviceKey来获取requestor（即filter的责任链）
             Requestor<?> requestor = requestorMap.get(serviceKey);
             CallFuture<Response> callFuture = new CallFuture<>();
             try {
-                // 1. Server在这里会调用本地的impl执行
+                // 2. Server在这里会调用本地的impl执行
                 requestor.request(request, callFuture);
             } catch (IllegalStateException e) {
                 callFuture.handleResult(new RpcResponse(request.getId(), null, e));
             }
-            // 2. 然后会在这里等待本地执行的结果
+            // 3.. 然后会在这里等待本地执行的结果
             Response response = callFuture.get();
             try {
-                // 3. 在这里把响应的结果序列化成Response，然后写入channel
+                // 4. 在这里把响应的结果序列化成Response，然后写入channel
                 byte[] content = codec.encode(RpcResponse.class, (RpcResponse) response);
                 ctx.channel().writeAndFlush(Unpooled.wrappedBuffer(content));
             } catch (Throwable error) {
@@ -87,6 +88,10 @@ public class NettyServerHander extends ChannelInboundHandlerAdapter {
             log.warn("unexpect error: " + ex.getMessage(), ex);
             ctx.channel().close();
         }
+    }
+
+    void registerService(Requestor<?> requestor) {
+        requestorMap.putIfAbsent(requestor.getUri().getServiceKey(), requestor);
     }
 
 }

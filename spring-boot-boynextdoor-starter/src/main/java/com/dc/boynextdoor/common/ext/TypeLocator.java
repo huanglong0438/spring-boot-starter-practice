@@ -1,5 +1,8 @@
 package com.dc.boynextdoor.common.ext;
 
+import com.dc.boynextdoor.remoting.Filter;
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -11,6 +14,7 @@ import java.util.concurrent.ConcurrentMap;
  * @Author donglongcheng01
  * @Date 2019-08-01
  **/
+@Slf4j
 public class TypeLocator {
 
     private static final ConcurrentMap<Class<?>, Object> CLASS_SINGLETON = new ConcurrentHashMap<>();
@@ -48,4 +52,46 @@ public class TypeLocator {
         return instance;
     }
 
+    /**
+     * {@code baseClass}在同一个包下是否有名为{@code name}的子类
+     *
+     * @param baseClass 基类，如Filter.class
+     * @param name 子类名称，如ServerContext
+     * @param <T> 泛型
+     * @return ServerContextFilter是否存在
+     */
+    public <T> boolean hasExtension(Class<T> baseClass, String name) {
+        try {
+            T instance = getInstanceOfType(baseClass, name);
+            return instance != null;
+        } catch (Exception e) {
+            log.error("error while loading Class: " + name + " of " + baseClass.getName());
+            return false;
+        }
+    }
+
+    /**
+     * 获取{@code baseClass}的名为{@code name}的子类
+     *
+     * @param baseClass 基类，如Filter.class
+     * @param name 子类名称，如ServerContext
+     * @param <T> 泛型
+     * @return ServerContextFilter是否存在
+     */
+    public <T> T getInstanceOfType(Class<T> baseClass, String name) {
+        try {
+            String className = name + baseClass.getSimpleName();
+            String originClassName = baseClass.getName();
+            int lastDotIndex = originClassName.lastIndexOf(".");
+            String newClassName = originClassName.substring(0, lastDotIndex) + "." + className;
+            return (T) getInstanceOfType(Class.forName(newClassName));
+        } catch (Exception e) {
+            log.error("error while loading Class: " + name + " of " + baseClass.getName());
+        }
+        return null;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(TypeLocator.getInstance().hasExtension(Filter.class, "ServerContext"));
+    }
 }

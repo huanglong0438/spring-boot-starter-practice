@@ -61,6 +61,16 @@ public final class Constants {
      */
     public static final String INTERFACE_SIMPLE_KEY = "interface.simple";
 
+    /**
+     * 服务端自定义的filter的key
+     */
+    public static final String SERVER_FILTER_KEY = "server.filter";
+
+    /**
+     * 默认的服务端请求要过的filter
+     */
+    public static final String DEFAULT_FILTERS = "ServerContext,ExecuteLimit,ServerMonitor,RemoteAccess,BndTest";
+
     private Constants() {
     }
 
