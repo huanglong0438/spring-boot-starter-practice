@@ -13,6 +13,6 @@ import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 @AutoConfigureAfter(BNDConfigAutoConfiguration.class)
 public class BNDAutoConfiguration {
 
-    // todo
+    // todo dlc SpringBoot结合到RPC框架
 
 }

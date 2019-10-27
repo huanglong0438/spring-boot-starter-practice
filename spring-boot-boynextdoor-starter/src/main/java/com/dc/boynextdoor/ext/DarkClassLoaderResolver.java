@@ -1,5 +1,7 @@
 package com.dc.boynextdoor.ext;
 
+import com.dc.boynextdoor.common.URI;
+
 /**
  * DarkClassLoaderResolver
  *
@@ -24,17 +26,34 @@ public final class DarkClassLoaderResolver {
     }
 
     /**
-     * todo dlc vanEndPoint#export() -->|加载serveice的类| DarkClassLoader#loaderClass --> DarkClassLoaderResolver
+     * 定位到VanEndPoint，然后根据{@code classLoadStrategy}策略获取ClassLoader
      *
      * @return
      */
     public static synchronized ClassLoader getClassLoader() {
-        return null;
+        return getClassLoader(0);
     }
 
-    static synchronized ClassLoader getClassLoader(final int callerOffset) {
-        return null;
+    static synchronized ClassLoader getClassLoader(int callerOffset) {
+        Class caller = getCallerClass(callerOffset);
+        ClassLoadContext classLoadContext = new ClassLoadContext(caller);
+        // 用VanEndPoint的ClassLoader
+        return classLoadStrategy.getClassLoader(classLoadContext);
     }
+
+    /**
+     * <p>CALLER_RESOLVER.getClassContext获取调用栈（getCallerClass -> getClassLoader -> loaderClass），
+     * <p>获取的过程通过自定义{@code SecurityManager}子类绕过安全检查
+     * <p>然后后面是偏移量，刚好定位到{@link com.dc.boynextdoor.remoting.VanEndPoint#export(URI, Object)}
+     *
+     * @param offset 偏移量
+     * @return 返回VanEndPoint调用类
+     */
+    private static Class getCallerClass(int offset) {
+        return CALLER_RESOLVER.getClassContext()[CALL_CONTEXT_OFFSET + offset];
+    }
+
+    private static final int CALL_CONTEXT_OFFSET = 3;
 
 
     /**

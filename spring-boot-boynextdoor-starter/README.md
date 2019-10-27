@@ -13,6 +13,7 @@
  - `com.dc.boynextdoor.core.MethodCache` - 用来缓存impl类的method，防止重复调用反射的性能问题，类似于单例模式的*饿汉模式*
  - `com.dc.boynextdoor.remoting.RpcLocalContext` - 跨线程版的ThreadLocal，对ThreadLocal的理解
  - `com.dc.boynextdoor.core.FilterManager` - 责任链模式，Java局部内部类访问局部变量为什么必须加final关键字
+ - `com.dc.boynextdoor.autoconfigure.reference.ServiceReferenceRegistrar` - 自定义注解，然后生成**代理工厂**的最佳实践
  
  
 ## todo

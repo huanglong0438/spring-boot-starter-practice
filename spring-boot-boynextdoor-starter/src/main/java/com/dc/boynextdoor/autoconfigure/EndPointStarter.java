@@ -1,6 +1,7 @@
 package com.dc.boynextdoor.autoconfigure;
 
 import com.dc.boynextdoor.autoconfigure.exporting.ServiceExporterRegisterBean;
+import com.dc.boynextdoor.common.URI;
 import com.dc.boynextdoor.common.ext.TypeLocator;
 import com.dc.boynextdoor.remoting.EndPoint;
 import com.dc.boynextdoor.remoting.VanEndPoint;
@@ -21,7 +22,7 @@ import java.util.Map;
  * EndPointStarter，实现了ApplicationListener，在Spring加载完成后会执行主流程，挨个注册服务
  *
  * @title EndPointStarter
- * @Description
+ * @Description EndPointStarter，实现了ApplicationListener，在Spring加载完成后会执行主流程，挨个注册服务
  * @Author donglongcheng01
  * @Date 2019-07-23
  **/
@@ -33,6 +34,13 @@ public class EndPointStarter implements ApplicationListener<ApplicationReadyEven
     @Autowired
     private BoyNextDoorProperties boyNextDoorProperties;
 
+    /**
+     * <pre>
+     * Spring发生ApplicationReadyEvent事件时，做出响应
+     * 1. 启动netty server，包括在childHandler里登记{@link VanEndPoint#export(URI, Object)}注册好的handler
+     * 2. 把service注册到zk
+     * </pre>
+     */
     public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
         // EndPoint就是nettyServer
         EndPoint endPoint = TypeLocator.getInstance().getInstanceOfType(EndPoint.class);
