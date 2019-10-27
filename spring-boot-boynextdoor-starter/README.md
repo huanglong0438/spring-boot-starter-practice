@@ -29,3 +29,6 @@
 [一次ByteBuf的故障排查经历](http://www.sohu.com/a/132214404_684743)  
 >为了提升性能，Netty默认的I/O Buffer使用直接内存DirectByteBuf，可以减少Socket读写的内存拷贝，即著名的 ”零拷贝”。  
  由于是直接内存，因此无法直接转换成堆内存，因此它并不支持array()方法。用户需要自己做内存拷贝。
+ 
+## 2019年10月27日
+ServiceReferenceRegistrar，在SpringBoot里扫描自定义注解，然后自己注册进去的最佳实践
