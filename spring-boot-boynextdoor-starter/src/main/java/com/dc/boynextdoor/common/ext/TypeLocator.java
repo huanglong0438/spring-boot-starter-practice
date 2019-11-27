@@ -72,6 +72,7 @@ public class TypeLocator {
 
     /**
      * 获取{@code baseClass}的名为{@code name}的子类
+     * <p>要求：子类和基类必须在同一个包下
      *
      * @param baseClass 基类，如Filter.class
      * @param name 子类名称，如ServerContext

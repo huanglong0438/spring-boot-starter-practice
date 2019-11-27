@@ -24,6 +24,8 @@ public class BoyNextDoorProperties {
     // todo 后面考虑换成Eruka
     private String zookeeperConnect;
 
+    private String defaultGroup;
+
     private Boolean registration = true;
 
     private Integer defaultPort = RandomUtils.nextInt(RANGE_PORT_START, RANGE_PORT_END);

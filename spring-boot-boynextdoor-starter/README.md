@@ -14,6 +14,9 @@
  - `com.dc.boynextdoor.remoting.RpcLocalContext` - 跨线程版的ThreadLocal，对ThreadLocal的理解
  - `com.dc.boynextdoor.core.FilterManager` - 责任链模式，Java局部内部类访问局部变量为什么必须加final关键字
  - `com.dc.boynextdoor.autoconfigure.reference.ServiceReferenceRegistrar` - 自定义注解，然后生成**代理工厂**的最佳实践
+ - `com.dc.boynextdoor.cluster.loadbalancer.RoundRobinLoadBalancer` - 通过**ConcurrentMap**和**AtomicPositiveInteger**实现的负载均衡器，背后的知识点是ConcurrentHashMap的分桶并发和CAS乐观锁
+ - `com.dc.boynextdoor.registry.Registry` - RPC调用的本质就是基于java的RMI功能的模仿，Registry的概念就是一个服务的仓库，给server端提供服务的注册，给client端提供服务的获取
+ - `com.dc.boynextdoor.autoconfigure.reference.ServiceReferenceFactoryBean` - logged(proxyFactory.getProxy(requestor))，自定义AOP动态代理的最佳实践
  
  
 ## todo
@@ -32,3 +35,16 @@
  
 ## 2019年10月27日
 ServiceReferenceRegistrar，在SpringBoot里扫描自定义注解，然后自己注册进去的最佳实践
+
+## 2019年11月13日
+ServiceReferenceFactoryBean -> `FailfastCluster(快速失败)` 和 `FailbackCluster(故障自动恢复)` 的概念
+
+## 2019年11月21日
+`java里类的设计套路`永远是，一个interface规定了有哪些方法，然后一个抽象类实现interface的方法，然后在留下doXXX方法给实现类做
+
+## 2019年11月26日
+`com.dc.boynextdoor.remoting.client.ReferenceCountClient` - 借鉴了JVM引用计数法GC的思想，计数为0时才close，getClient只是计数+1
+
+## todo
+ - `com.dc.boynextdoor.registry.AbstractRegistry` 写时拷贝技术原理懂了，在什么时候才是真的有必要的呢
+ - `com.dc.boynextdoor.autoconfigure.reference.ServiceReferenceFactoryBean` 整个梳理一遍

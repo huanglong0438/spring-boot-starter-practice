@@ -71,6 +71,11 @@ public final class Constants {
      */
     public static final String DEFAULT_FILTERS = "ServerContext,ExecuteLimit,ServerMonitor,RemoteAccess,BndTest";
 
+    /**
+     * 复用连续连接失败n次后会被短暂拉黑，拉黑的时间默认是2min
+     */
+    public static final Integer DEFAULT_STATUS_EXPIRE_TIME = 2 * 60 * 1000;
+
     private Constants() {
     }
 

@@ -54,6 +54,10 @@ public class NettyClient implements Client {
 
     private NettyClientInitializer clientPipeLineFactory;
 
+    public NettyClient() {
+
+    }
+
     public NettyClient(URI uri) {
         this.uri = uri;
     }
@@ -140,7 +144,7 @@ public class NettyClient implements Client {
         } catch (Throwable error) {
             throw new IllegalStateException("encode error", error);
         }
-        // 读锁，除非channel重新连接，否则不会被hang住
+        // 读锁，除非channel重新连接，否则不会被hang住。channel重连的时候会被写锁hang住，等待channel建立完成
         stateLock.readLock().lock();
         try {
             getChannel().writeAndFlush(Unpooled.wrappedBuffer(content));

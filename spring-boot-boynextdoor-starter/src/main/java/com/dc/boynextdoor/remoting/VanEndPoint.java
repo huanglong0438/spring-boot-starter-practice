@@ -2,20 +2,27 @@ package com.dc.boynextdoor.remoting;
 
 import com.dc.boynextdoor.common.Requestor;
 import com.dc.boynextdoor.common.constants.Constants;
+import com.dc.boynextdoor.common.ext.TypeLocator;
+import com.dc.boynextdoor.core.ClientRequestor;
 import com.dc.boynextdoor.core.FilterManager;
 import com.dc.boynextdoor.core.ServerRequestor;
 import com.dc.boynextdoor.ext.DarkClassLoader;
+import com.dc.boynextdoor.remoting.client.Client;
+import com.dc.boynextdoor.remoting.client.ReferenceCountClient;
 import com.dc.boynextdoor.remoting.server.NettyServer;
 import com.dc.boynextdoor.remoting.server.Server;
 
 import com.dc.boynextdoor.common.URI;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
- * VanEndPoint 代理了nettyServer的功能
+ * VanEndPoint（终端） 代理了nettyServer的功能
  *
  * @title VanEndPoint
  * @Description VanEndPoint，封装了nettyServer的功能
@@ -23,6 +30,8 @@ import java.util.concurrent.ConcurrentMap;
  * @Date 2019-08-01
  **/
 public class VanEndPoint implements EndPoint {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(VanEndPoint.class);
 
     private volatile boolean started;
 
@@ -40,6 +49,11 @@ public class VanEndPoint implements EndPoint {
      * 登记每个service的requestor（filter链） eg. com.dc.XXXService --> filters
      */
     private final ConcurrentMap<String, Requestor<?>> serviceRequestorMap = new ConcurrentHashMap<String, Requestor<?>>();
+
+    /**
+     *
+     */
+    private final ClientManager clientManager = new ClientManager();
 
     /**
      * <p>1. Server端构造filter责任链
@@ -100,9 +114,16 @@ public class VanEndPoint implements EndPoint {
         return server;
     }
 
+    /**
+     * uri to requestor，
+     * 根据uri --> nettyClient --> ClientRequestor，最后再包装上责任链处理各种杂事(统计,校验...)
+     */
     @Override
     public <T> Requestor<T> reference(Class<T> type, URI uri) throws IllegalStateException {
-        return null;
+        Requestor<T> requestor = new ClientRequestor<T>(type, uri, clientManager.getClient(uri));
+        // todo 这里的filters是错的，是server的，不是client的
+        return FilterManager.buildReuqestorChain(requestor,
+                "", "clientcontext,activelimit,clientmonitor,stargateclientfceye");
     }
 
     @Override
@@ -133,6 +154,72 @@ public class VanEndPoint implements EndPoint {
     @Override
     public boolean isStarted() {
         return false;
+    }
+
+    /**
+     * 封装了uri --> ReferenceCountClient(对client的计数引用)，
+     * client的管理器，在getClient的时候计数加一，但是返回的引用还是原来的
+     */
+    static class ClientManager {
+        /**
+         * uri --> ReferenceCountClient(对client的计数引用)
+         */
+        private final ConcurrentMap<String, ReferenceCountClient> referenceClientMap = new ConcurrentHashMap<>();
+        private final ConcurrentMap<String, Object> referenceLock = new ConcurrentHashMap<>();
+
+        /**
+         * 在getClient的时候计数加一，但是返回的引用还是原来的（借鉴了JVM引用计数法思想）
+         */
+        private Client getClient(URI uri) {
+            String key = uri.getAddress();
+            referenceLock.putIfAbsent(key, new Object());
+            Object lock = referenceLock.get(key);
+
+            synchronized (lock) {
+                ReferenceCountClient client = referenceClientMap.get(key);
+                if (client != null) {
+                    if (!client.isClosed()) { // 原来有client，并且正常运行着，则引用计数+1，然后返回
+                        client.incrementAndGetCount();
+                        return client;
+                    }
+                    // 原来有client，但是已经关闭了，则remove掉
+                    referenceClientMap.remove(key);
+                }
+
+                ReferenceCountClient newClient = new ReferenceCountClient(initClient(uri), lock);
+                client = referenceClientMap.putIfAbsent(key, newClient);
+                if (client == null) {
+                    // put succeeded, use new value
+                    client = newClient;
+                } else {
+                    LOGGER.error("error while get Client, old client is exists!!");
+                }
+                return client;
+            }
+        }
+
+        /**
+         * 通过Remoting（一种工厂）获取Client，实际就是new Client，然后client.connect
+         */
+        private Client initClient(URI uri) {
+            Remoting remoting = TypeLocator.getInstance().getInstanceOfType(Remoting.class, "Netty");
+            return remoting.connect(uri);
+        }
+
+        public void destroy() {
+            for (Map.Entry<String, Object> entry : referenceLock.entrySet()) {
+                String key = entry.getKey();
+                Object lock = entry.getValue();
+                synchronized (lock) {
+                    ReferenceCountClient client = referenceClientMap.get(key);
+                    try {
+                        client.close();
+                    } catch (Throwable throwable) {
+                        LOGGER.warn(throwable.getMessage(), throwable);
+                    }
+                }
+            }
+        }
     }
 
 }
