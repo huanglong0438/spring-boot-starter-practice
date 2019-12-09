@@ -49,11 +49,11 @@ public class ServiceReferenceRegistrar extends AbstractRegister implements Impor
                 }).collect(Collectors.toSet());
 
         // 给@ServiceReference的Class设置为ServiceReferenceFactoryBean（FactoryBean）的bd，
-        // 然后设置注册中心stargateConfigService
+        // 然后设置注册中心bndConfigService
         // 最后注册到registry里
         references.forEach(fieldType -> {
             BeanDefinition bd = BeanDefinitionBuilder.rootBeanDefinition(ServiceReferenceFactoryBean.class)
-                    .addPropertyReference("stargateConfigService", "stargateConfigService")
+                    .addPropertyReference("bndConfigService", "bndConfigService")
                     .addConstructorArgValue(fieldType)
                     .getBeanDefinition();
             String name = beanNameGenerator.generateBeanName(bd, registry);

@@ -124,7 +124,7 @@ public class VanEndPoint implements EndPoint {
         Requestor<T> requestor = new ClientRequestor<T>(type, uri, clientManager.getClient(uri));
         // todo 这里的filters是错的，是server的，不是client的
         return FilterManager.buildReuqestorChain(requestor,
-                "", "clientcontext,activelimit,clientmonitor,stargateclientfceye");
+                "", "clientcontext,activelimit,clientmonitor,clientfceye");
     }
 
     @Override
