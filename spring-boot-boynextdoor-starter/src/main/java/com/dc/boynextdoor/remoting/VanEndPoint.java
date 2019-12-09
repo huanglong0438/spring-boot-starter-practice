@@ -56,6 +56,7 @@ public class VanEndPoint implements EndPoint {
     private final ClientManager clientManager = new ClientManager();
 
     /**
+     * 各种登记，登记给netty，登记到一个map（endPointStarter最后会统一放到zk上）
      * <p>1. Server端构造filter责任链
      * <p>2. 登记uri的实现类为impl，登记到netty的handler里（处理请求），登记到这里的map里（注册到zk）
      *

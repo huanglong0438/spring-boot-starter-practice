@@ -2,14 +2,17 @@ package com.dc.boynextdoor.autoconfigure;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.properties.bind.Binder;
+import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.Environment;
+import org.springframework.util.ClassUtils;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Map;
 
 /**
  * BNDConfigService
- * todo dlc bnd和SpringConfig的联动
  *
  * @title BNDConfigService
  * @Description
@@ -23,11 +26,24 @@ public class BNDConfigService {
 
     private String ipaddr;
 
+    private Map<String, ServiceConfiguration> service;
+
     public BNDConfigService(BoyNextDoorProperties properties, Environment environment) {
         this.properties = properties;
 
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 
+        // 有效 = Binder.class可加载 + environment是可配置的
+        boolean enable = ClassUtils.isPresent(Binder.class.getName(), classLoader)
+                && environment instanceof ConfigurableEnvironment;
+        if (enable) {
+            // environment -> 配置(binder) -> serviceConfig(service)
+            service = new ServiceConfigurationBinder(environment, properties).bind();
+        } else {
+            String reason = environment instanceof ConfigurableEnvironment
+                    ? "Spring Boot version lower than 2.0.0" : "environment is not configurable";
+            log.warn("service specific configuration not support, because {}", reason);
+        }
     }
 
     /**

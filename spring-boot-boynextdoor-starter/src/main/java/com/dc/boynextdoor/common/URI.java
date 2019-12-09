@@ -170,6 +170,7 @@ public final class URI {
         public URI build() {
             return new URI(this);
         }
+
     }
 
     public URI(Builder builder) {

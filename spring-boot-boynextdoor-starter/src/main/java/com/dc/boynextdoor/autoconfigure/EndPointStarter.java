@@ -82,4 +82,8 @@ public class EndPointStarter implements ApplicationListener<ApplicationReadyEven
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
         this.beanFactory = (ListableBeanFactory) beanFactory;
     }
+
+    public void setBoyNextDoorProperties(BoyNextDoorProperties boyNextDoorProperties) {
+        this.boyNextDoorProperties = boyNextDoorProperties;
+    }
 }

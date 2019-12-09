@@ -17,6 +17,7 @@
  - `com.dc.boynextdoor.cluster.loadbalancer.RoundRobinLoadBalancer` - 通过**ConcurrentMap**和**AtomicPositiveInteger**实现的负载均衡器，背后的知识点是ConcurrentHashMap的分桶并发和CAS乐观锁
  - `com.dc.boynextdoor.registry.Registry` - RPC调用的本质就是基于java的RMI功能的模仿，Registry的概念就是一个服务的仓库，给server端提供服务的注册，给client端提供服务的获取
  - `com.dc.boynextdoor.autoconfigure.reference.ServiceReferenceFactoryBean` - logged(proxyFactory.getProxy(requestor))，自定义AOP动态代理的最佳实践
+ - `com.dc.boynextdoor.autoconfigure.exporting.ServiceExportingRegister#getCandidates` [自定义类扫描器](https://fangjian0423.github.io/2017/06/11/spring-custom-component-provider/)
  
  
 ## todo

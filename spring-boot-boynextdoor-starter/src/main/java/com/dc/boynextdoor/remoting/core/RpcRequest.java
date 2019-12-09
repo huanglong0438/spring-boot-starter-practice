@@ -2,6 +2,7 @@ package com.dc.boynextdoor.remoting.core;
 
 import com.dc.boynextdoor.common.Request;
 import com.dc.boynextdoor.common.URI;
+import com.dc.boynextdoor.common.utils.IdUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -47,6 +48,14 @@ public class RpcRequest implements Request {
     private URI uri;
 
     public RpcRequest() {
+    }
+
+    public RpcRequest(URI uri, String methodName, Class<?>[] parameterTypes, Object[] parameters) {
+        this.uri = uri;
+        this.id = IdUtils.genUUID();
+        this.methodName = methodName;
+        setParameterTypes(parameterTypes);
+        this.parameters = parameters;
     }
 
     public RpcRequest(String methodName, Object[] parameters, Class<?>[] parameterTypes, URI uri) {
