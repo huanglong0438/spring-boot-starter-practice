@@ -60,7 +60,7 @@ public class NettyServer implements Server {
         // 【重点】netty服务的启动
         InetSocketAddress addr = new InetSocketAddress(host, port);
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
-        EventLoopGroup workerGroup = new NioEventLoopGroup();
+        EventLoopGroup workerGroup = new NioEventLoopGroup(); // 默认用处理器核数*2的worker线程
         try {
             ServerBootstrap b = new ServerBootstrap();
             b.group(bossGroup, workerGroup)
